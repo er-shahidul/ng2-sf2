@@ -1,0 +1,10 @@
+rbs_security_user:
+     resource: |
+         alias: security.user
+         section: api
+         only: ['create', 'index', 'show']
+     type: sylius.resource_api
+     defaults:
+         _format : json
+         _sylius:
+               paginate: false

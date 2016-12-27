@@ -1,0 +1,19 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button"  (click)="isCollapsed = !isCollapsed" class="navbar-toggle">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="javascript:">{{title}}</a>
+    </div>
+
+    <div class="navbar-collapse" [collapse]="isCollapsed">
+      <ul class="nav navbar-nav">
+        <rbs-nav-item *ngFor="let link of links" [link]="link"></rbs-nav-item>
+      </ul>
+    </div>
+  </div>
+</nav>

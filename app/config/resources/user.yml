@@ -1,0 +1,5 @@
+sylius_resource:
+    resources:
+        security.user:
+            classes:
+                model: Rbs\SecurityBundle\Entity\User

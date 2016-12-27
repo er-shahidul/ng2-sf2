@@ -1,3 +1,7 @@
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
+
+rbs_security:
+    resource: "@RbsSecurityBundle/Resources/config/routing.yml"
+    prefix:   /

@@ -1,0 +1,9 @@
+<li *ngIf="!link.children" routerLinkActive="active">
+  <a [routerLink]="link.path">{{link.label}}</a>
+</li>
+<li *ngIf="link.children" dropdown routerLinkActive="active">
+  <a href="javascript:" dropdownToggle>{{link.label}} <span class="caret"></span></a>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="split-button" dropdownMenu>
+    <rbs-nav-item *ngFor="let childLink of link.children" [link]="childLink"></rbs-nav-item>
+  </ul>
+</li>
