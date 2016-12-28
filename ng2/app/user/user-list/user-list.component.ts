@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {User} from "../user";
-import {Observable} from "rxjs";
 import {UserService} from "../user.service";
 
 @Component({
@@ -9,12 +8,19 @@ import {UserService} from "../user.service";
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements OnInit {
-  users: User[];
+  users: Array<User>;
   constructor(protected userService:UserService) { }
 
   getUsers() {
     this.userService.getUsers()
         .subscribe(users => this.users = users);
+  }
+
+  removeUser(user:User) {
+    if(!confirm("Are you sure, you want to delete user data?")) return;
+
+    this.userService.remove(user)
+        .subscribe(users => this.users = this.users.filter(value => value.id != user.id));
   }
 
   ngOnInit() {

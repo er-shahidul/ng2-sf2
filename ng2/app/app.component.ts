@@ -24,7 +24,7 @@ export class AppComponent implements OnInit{
   }
 
   private getDeepestTitle(routeSnapshot: ActivatedRouteSnapshot) {
-    let title = routeSnapshot.data ? routeSnapshot.data['title'] : '';
+    let title = routeSnapshot.data && routeSnapshot.data['title'] ? routeSnapshot.data['title'] : '';
     if (routeSnapshot.firstChild) {
       title = this.getDeepestTitle(routeSnapshot.firstChild) || title;
     }

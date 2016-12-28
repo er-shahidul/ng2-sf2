@@ -19,9 +19,14 @@ export class UserService {
   addUser (user: User): Observable<User> {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
-console.log(user);
     return this.http.post(this.usersUrl, user, options)
         .map(UserService.extractData)
+        .catch(UserService.handleError);
+  }
+
+  remove(user: User): Observable<User> {
+    return this.http.delete(this.usersUrl + user.id, {})
+        .map(()=> user)
         .catch(UserService.handleError);
   }
 
