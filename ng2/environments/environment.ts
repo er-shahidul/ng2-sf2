@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  baseUrl: '/_service/'
+  baseUrl: 'http://ng2-sf2.dev/_service/'
 };

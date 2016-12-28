@@ -17,7 +17,7 @@
 
 # compiled output
 /tmp
-/src/_service/bundles
+/ng2/_service/bundles
 
 # dependencies
 /node_modules

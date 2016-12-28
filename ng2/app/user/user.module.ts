@@ -5,12 +5,14 @@ import {HttpModule} from "@angular/http";
 import {UserService} from "./user.service";
 import {NgModule} from "@angular/core";
 import {RoutingModule} from "./user-routing.module";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ErrorBlockComponent} from "../error-block/error-block.component";
 
 @NgModule({
   imports: [
-    CommonModule, HttpModule, RoutingModule
+    CommonModule, HttpModule, RoutingModule, ReactiveFormsModule, FormsModule
   ],
-  declarations: [UserListComponent, NewUserComponent],
+  declarations: [UserListComponent, NewUserComponent, ErrorBlockComponent],
   providers: [UserService]
 })
 export class UserModule {}

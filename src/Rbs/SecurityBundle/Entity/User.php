@@ -4,6 +4,7 @@ namespace Rbs\SecurityBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Resource\Model\ResourceInterface;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * User
@@ -40,7 +41,7 @@ class User implements ResourceInterface
      * @var string
      *
      * @ORM\Column(name="full_name", type="string", length=255, nullable=true)
-     *
+     * @JMS\SerializedName("fullName")
      */
     private $fullName;
 

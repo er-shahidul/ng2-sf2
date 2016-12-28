@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import {Http, Response} from "@angular/http";
+import {Http, Response, Headers, RequestOptions} from "@angular/http";
 import {Observable} from "rxjs";
 import {User} from "./user";
+import {environment} from "../../environments/environment";
 
 @Injectable()
 export class UserService {
-  private _usersUrl = 'users';
+  private _usersUrl = 'users/';
 
   constructor(private _http: Http) { }
 
@@ -15,9 +16,17 @@ export class UserService {
         .catch(UserService.handleError);
   }
 
+  addUser (user: User): Observable<User> {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+console.log(user);
+    return this.http.post(this.usersUrl, user, options)
+        .map(UserService.extractData)
+        .catch(UserService.handleError);
+  }
+
   private static extractData(res: Response) {
-    let body = res.json();
-    return body.data || { };
+    return res.json();
   }
 
   private static handleError (error: Response | any) {
@@ -39,6 +48,6 @@ export class UserService {
   }
 
   get usersUrl(): string {
-    return "/_service/" + this._usersUrl;
+    return environment.baseUrl + this._usersUrl;
   }
 }
