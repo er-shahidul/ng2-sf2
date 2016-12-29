@@ -21,7 +21,7 @@
       </td>
     </tr>
     <tr *ngIf="!users || users.length == 0">
-       <td colspan="5">No user available</td>
+       <td colspan="5">{{emptyMessage}}</td>
     </tr>
   </tbody>
 </table>

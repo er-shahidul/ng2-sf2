@@ -8,12 +8,15 @@ import {UserService} from "../user.service";
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements OnInit {
+  _emptyMessage= 'No Data Found';
+  emptyMessage= 'Loading data';
   users: Array<User>;
   constructor(protected userService:UserService) { }
 
   getUsers() {
+    this.emptyMessage = 'Loading data from server...';
     this.userService.getUsers()
-        .subscribe(users => this.users = users);
+        .subscribe(users =>{ this.users = users;  this.emptyMessage = this._emptyMessage });
   }
 
   removeUser(user:User) {
