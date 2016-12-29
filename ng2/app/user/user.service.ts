@@ -31,7 +31,8 @@ export class UserService {
   }
 
   private static extractData(res: Response) {
-    return res.json();
+    let body = res.json();
+    return typeof body._embedded != 'undefined' ? body._embedded.items : body;
   }
 
   private static handleError (error: Response | any) {

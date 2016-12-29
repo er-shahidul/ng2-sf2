@@ -7,4 +7,6 @@ rbs_security_user:
      defaults:
          _format : json
          _sylius:
-               paginate: false
+            filterable: true
+            paginate: $paginate
+            sortable: true
