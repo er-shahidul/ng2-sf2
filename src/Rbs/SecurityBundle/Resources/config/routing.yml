@@ -8,5 +8,5 @@ rbs_security_user:
          _format : json
          _sylius:
             filterable: true
-            paginate: $paginate
+            paginate: $limit
             sortable: true

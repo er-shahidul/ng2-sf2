@@ -1,33 +1,45 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {User} from "../user";
 import {UserService} from "../user.service";
+import {UserListResponse} from "../user-list-response";
 
 @Component({
-  selector: 'app-user-list',
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss']
+    selector: 'app-user-list',
+    templateUrl: './user-list.component.html',
+    styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements OnInit {
-  _emptyMessage= 'No Data Found';
-  emptyMessage= 'Loading data';
-  users: Array<User>;
-  constructor(protected userService:UserService) { }
+    _emptyMessage = 'No Data Found';
+    emptyMessage = 'Loading data';
+    response: UserListResponse = new UserListResponse();
 
-  getUsers() {
-    this.emptyMessage = 'Loading data from server...';
-    this.userService.getUsers()
-        .subscribe(users =>{ this.users = users;  this.emptyMessage = this._emptyMessage });
-  }
+    constructor(protected userService: UserService) {
+    }
 
-  removeUser(user:User) {
-    if(!confirm("Are you sure, you want to delete user data?")) return;
+    getUsers(page = 1) {
+        this.emptyMessage = 'Loading data from server...';
+        this.userService.getUsers(page + "")
+            .subscribe(response => {
+                this.response = response;
+                this.emptyMessage = this._emptyMessage
+                console.log(this.response);
+            });
+    }
 
-    this.userService.remove(user)
-        .subscribe(users => this.users = this.users.filter(value => value.id != user.id));
-  }
+    removeUser(user: User) {
+        if (!confirm("Are you sure, you want to delete user data?")) return;
 
-  ngOnInit() {
-    this.getUsers();
-  }
+        this.userService.remove(user)
+            .subscribe(users => this.getUsers());
+    }
+
+    goTo(paginate) {
+        console.log(paginate.page);
+        this.getUsers(paginate.page)
+    }
+
+    ngOnInit() {
+        this.getUsers();
+    }
 
 }

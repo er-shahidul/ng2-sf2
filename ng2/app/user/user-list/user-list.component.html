@@ -9,7 +9,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let user of users; let i = index">
+    <tr *ngFor="let user of response?._embedded.items; let i = index">
       <td>{{i + 1}}</td>
       <td>{{user.username}}</td>
       <td>{{user.email}}</td>
@@ -20,8 +20,12 @@
       </button>
       </td>
     </tr>
-    <tr *ngIf="!users || users.length == 0">
+    <tr *ngIf="!response || !response._embedded || response.total == 0">
        <td colspan="5">{{emptyMessage}}</td>
     </tr>
   </tbody>
 </table>
+<pagination [totalItems]="response.total" [itemsPerPage]="response.limit" [(ngModel)]="response.page" [maxSize]="5" class="pagination-sm"
+                    [boundaryLinks]="true" [rotate]="false" (pageChanged)="goTo($event)">
+
+</pagination>

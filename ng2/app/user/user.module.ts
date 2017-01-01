@@ -7,10 +7,11 @@ import {NgModule} from "@angular/core";
 import {RoutingModule} from "./user-routing.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ErrorBlockComponent} from "../error-block/error-block.component";
+import { PaginationModule } from 'ng2-bootstrap';
 
 @NgModule({
   imports: [
-    CommonModule, HttpModule, RoutingModule, ReactiveFormsModule, FormsModule
+    CommonModule, HttpModule, RoutingModule, ReactiveFormsModule, FormsModule, PaginationModule
   ],
   declarations: [UserListComponent, NewUserComponent, ErrorBlockComponent],
   providers: [UserService]

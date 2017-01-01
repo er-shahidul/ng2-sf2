@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import {Http, Response, Headers, RequestOptions} from "@angular/http";
+import {Http, Response, Headers, RequestOptions, URLSearchParams} from "@angular/http";
 import {Observable} from "rxjs";
 import {User} from "./user";
 import {environment} from "../../environments/environment";
+import {UserListResponse} from "./user-list-response";
+
+const ROW_PER_PAGE = "10";
 
 @Injectable()
 export class UserService {
@@ -10,8 +13,11 @@ export class UserService {
 
   constructor(private _http: Http) { }
 
-  getUsers (): Observable<User[]> {
-    return this.http.get(this.usersUrl)
+  getUsers (page:string = "1"): Observable<UserListResponse> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('page', page);
+    params.set('limit', ROW_PER_PAGE);
+    return this.http.get(this.usersUrl, {search: params})
         .map(UserService.extractData)
         .catch(UserService.handleError);
   }
@@ -31,8 +37,7 @@ export class UserService {
   }
 
   private static extractData(res: Response) {
-    let body = res.json();
-    return typeof body._embedded != 'undefined' ? body._embedded.items : body;
+    return res.json();
   }
 
   private static handleError (error: Response | any) {
