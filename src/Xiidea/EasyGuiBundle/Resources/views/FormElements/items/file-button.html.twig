@@ -1,0 +1,7 @@
+    <!-- to use bootstrap like file button see http://markusslima.github.io/bootstrap-filestyle/ -->
+{% if vars.label|default %}
+    <label for="{{ vars.id }}">{{ vars.label }}</label>
+{% endif %}
+    <div class="control"><!-- generator-code-start --><input id="{{ vars.id }}" name="{{ vars.id }}" type="file" class="filestyle" data-buttonName="btn-{{ vars.button_type }}"{% if vars.hide_icon|default %} data-icon="false"{% endif %}{% if vars.hide_input|default %} data-input="false"{% endif %} data-buttonText="&nbsp;{{ vars.button_text }}" /><!-- generator-code-end -->
+        <!-- original-code-start|<input id="{{ vars.id }}" name="{{ vars.id }}" type="file" class="filestyle" data-buttonName="btn-{{ vars.button_type }}"{% if vars.hide_icon|default %} data-icon="false"{% endif %}{% if vars.hide_input|default %} data-input="false"{% endif %} data-buttonText="&nbsp;{{ vars.button_text }}" />|original-code-end -->
+    </div>

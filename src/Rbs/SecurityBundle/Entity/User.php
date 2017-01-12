@@ -127,5 +127,10 @@ class User implements ResourceInterface
     {
         return $this->fullName;
     }
+
+    public function __toString()
+    {
+        return $this->fullName;
+    }
 }
 

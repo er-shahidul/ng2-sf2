@@ -1,0 +1,109 @@
+{% extends "XiideaEasyGuiBundle::base.html.twig" %}
+
+{% block content %}
+    <div class="page-header">
+        <h1><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Bundle Repository <small>selection of helpful bundles</small></h1>
+    </div>
+
+    <h4>Please select any option:</h4>
+    {% for bundle in bundles %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h4>{{ bundle.title }}</h4></div>
+                <div class="panel-body">
+                    <div style="padding: 0px 20px 100px 0px; float: left;">
+                        <img alt="" src="{{ bundle.icon | raw }}" />
+                    </div>
+                    <div>
+                        <p style="min-height: 80px">{{ bundle.description | raw }}</p>
+                        <p><a target="_blank" href="{{ bundle.url | raw }}">{{ bundle.url }}</a></p>
+                    </div>
+                    <hr/>
+                    <!-- Install Notes dialog -->
+                    {% if bundle.installNotes is defined %}
+                    <div class="modal fade" id="installNotesDialog{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel">Install Notes</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>{{ bundle.installNotes | raw }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <p class="text-right">
+                        {% if bundle.installNotes is defined %}
+                            <button class="btn btn" onclick="$('#installNotesDialog{{ loop.index }}').modal();">Install Notes</button>
+                        {% endif %}
+                        <button id="bundleInstallButton{{ loop.index }}" class="btn btn-primary" onclick="
+                                var routingEntry = JSON.parse('{{ bundle.routingEntry }}');
+                                var configuration = JSON.parse('{{ bundle.configuration }}');
+                                var routes = null;
+                                if (routingEntry)
+                                {
+                                    routes = {
+                                        name: routingEntry.name,
+                                        resource: routingEntry.resource,
+                                        type: routingEntry.type,
+                                        prefix: routingEntry.prefix
+                                    };
+                                }
+
+                                $('#pleaseWaitDialog').modal();
+                                $.ajax({
+                                    type:'POST',
+                                    url:'{{ path('guiInstallBundleAjax') }}',
+                                    data: {
+                                        bundlePath: '{{ bundle.bundlePath }}',
+                                        bundleVersion: '{{ bundle.bundleVersion }}',
+                                        bundleNamespace: '{{ bundle.bundleNamespace }}',
+                                        bundleTitle: '{{ bundle.title }}',
+                                        bundleName: '{{ bundle.bundleName }}',
+                                        configuration: configuration,
+                                        routingEntry: routes
+                                    }
+                                }).done(function(data) {
+                                    $('#pleaseWaitDialog').modal('hide');
+                                    $('#bundleInstallButton{{ loop.index }}').attr('disabled', 'disabled');
+                                    $('#installNotesDialog{{ loop.index }}').modal();
+                                    //window.location.reload(true);
+                                }).error(function(error) {
+                                    $('#pleaseWaitDialog').modal('hide');
+                                    alert('Error on bundle installation. Please check the log file.');
+                                    //window.location.reload(true);
+                                });
+                                " {% if bundle.installed is defined and bundle.installed == 1 %}disabled{% endif %}>
+                            <span class="glyphicon glyphicon-cloud-download"></span> Install
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <!-- Waiting dialog -->
+    <div class="modal fade" id="pleaseWaitDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Processing...</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            <span class="sr-only">Please Wait</span>
+                        </div>
+                    </div>
+                    <div id="sr-message-only">Retrieving bundle ...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

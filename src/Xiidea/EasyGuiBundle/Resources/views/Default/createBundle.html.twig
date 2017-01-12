@@ -1,0 +1,120 @@
+{% extends "XiideaEasyGuiBundle::base.html.twig" %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Create Bundle</h1>
+    </div>
+
+    <!-- Data form -->
+    <form name="dataForm" id="dataForm" role="form" method="post" action="{{ path('guiExecuteCommand') }}">
+        <input name="command" id="command" type="hidden" value="gui:generate:bundle" />
+        <div class="form-group col-sm-6">
+            <label for="bundleName">Name*</label>
+            <input name="bundleName" type="text" class="form-control" id="bundleName" placeholder="Bundle name" maxlength="40" required />
+            <p class="help-block">Enter here your bundle name.</p>
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="bundleNamespace">Vendor*</label>
+            <input name="bundleNamespace" type="text" class="form-control" id="bundleNamespace" placeholder="Vendor or project name" maxlength="40" required />
+            <p class="help-block">Enter here your vendor or project name.</p>
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="bundleSkeleton">Select bundle template</label>
+            <select id="bundleSkeleton" name="bundleSkeleton" class="form-control">
+                {% for template in templates %}
+                <option>{{ template }}</option>
+                {% endfor %}
+            </select>
+            <p class="help-block">Select here a predefined bundle template.</p>
+        </div>
+        <div class="form-group col-sm-12">
+            <hr/>
+            <div class="checkbox">
+                <label>
+                    <input name="createStructure" id="createStructure" type="checkbox" checked="checked" /> Create directory structure
+                </label>
+            </div>
+            <p>* Required fields.</p>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+
+    <!-- Response dialog -->
+    <div class="modal fade" id="responseDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="responseDialogHeader" class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 id="responseDialogHeaderText" class="modal-title">Command Execution</h4>
+                </div>
+                <div id="responseDialogBody" class="modal-body">
+                    <p>body content</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="close-button" type="button" class="btn btn-success" onclick="location.href='{{ path('gui') }}'">Continue</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // send ajax request to execute commandline
+        $(document).ready(function()
+        {
+            // bind to the form's submit event
+            $('#dataForm').submit(function() {
+                $('#pleaseWaitDialog').modal();
+                $(this).ajaxSubmit({success:showResponse, dataType:'json'}); return false;
+            });
+
+            $('#bundleName').focus();
+
+        });
+
+        function showResponse(response, statusText, xhr, $form)
+        {
+            var text = response.input + '<br/><br/>' + response.output;
+
+            $.ajax('{{ path('guiInstallAssetsAjax') }}').done(function(data) {
+                $.ajax('{{ path('guiUpdateSchemaAjax') }}').done(function(data2) {
+                    if (response.errorcode == 0)
+                    {
+                        $('#responseDialogHeader').css('background-color', 'green');
+                        $('#responseDialogHeaderText').html('Successful');
+                        $('#close-button').click(function() {
+                            location.href = '{{ app.request.getBaseURL() }}';
+                        });
+                    }
+                    else
+                    {
+                        $('#responseDialogHeader').css('background-color', 'red');
+                        $('#responseDialogHeaderText').html('Execution Error');
+                    }
+
+                    $('#pleaseWaitDialog').modal('hide');
+                    $('#responseDialogBody').html(text);
+                    $('#responseDialog').modal('show');
+                });
+            });
+        }
+    </script>
+    <!-- Waiting dialog -->
+    <div class="modal fade" id="pleaseWaitDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Processing...</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            <span class="sr-only">Please Wait</span>
+                        </div>
+                    </div>
+                    <div id="sr-message-only">Create bundle ...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

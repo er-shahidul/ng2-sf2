@@ -1,0 +1,5 @@
+sylius_resource:
+    resources:
+        app.project:
+            classes:
+                model: AppBundle\Entity\Project

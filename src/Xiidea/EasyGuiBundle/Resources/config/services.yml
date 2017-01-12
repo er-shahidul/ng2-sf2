@@ -1,0 +1,9 @@
+services:
+#    xiidea_easy_gui.example:
+#        class: Xiidea\EasyGuiBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]
+
+    xiidea_easy_gui.toolbar:
+        class: Xiidea\EasyGuiBundle\DataCollector\DataCollector
+        tags:
+            - { name: data_collector, template: 'XiideaEasyGuiBundle:Toolbar:toolbar', id: xiidea_easy_gui_toolbar }

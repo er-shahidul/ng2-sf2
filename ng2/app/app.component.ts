@@ -16,6 +16,7 @@ export class AppComponent implements OnInit{
       path: "/users", label: "Users", children: [
       {path: "/users/list", label: "User List"},
       {path: "/users/new", label: "New User"},
+      {path: "/entity/user/new", label: "User list using CRUD"},
     ]
     },
   ];
@@ -25,6 +26,11 @@ export class AppComponent implements OnInit{
 
   private getDeepestTitle(routeSnapshot: ActivatedRouteSnapshot) {
     let title = routeSnapshot.data && routeSnapshot.data['title'] ? routeSnapshot.data['title'] : '';
+
+    if(routeSnapshot.component && routeSnapshot.component['title'] != 'undefined') {
+      title = routeSnapshot.component['title'];
+    }
+
     if (routeSnapshot.firstChild) {
       title = this.getDeepestTitle(routeSnapshot.firstChild) || title;
     }

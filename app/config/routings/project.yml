@@ -1,0 +1,21 @@
+_rbs_app_project:
+     resource: |
+         alias: app.project
+         section: api
+         only: ['create', 'index', 'show', 'delete']
+     type: sylius.resource_api
+     defaults:
+         _format : json
+         _sylius:
+            filterable: true
+            paginate: $limit
+            sortable: true
+
+_rbs_app_web_project:
+     resource: |
+         alias: app.project
+         section: form
+         only: ['create', 'update']
+         templates: :App/Project
+     type: sylius.resource
+     prefix: form

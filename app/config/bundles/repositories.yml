@@ -1,0 +1,7 @@
+services:
+#    settings_repository:
+##        class: AppBundle\Repository\SettingRepository
+##        factory: ["@doctrine", getRepository]
+##        arguments:
+##            - 'AppBundle:Setting'
+##        public: false

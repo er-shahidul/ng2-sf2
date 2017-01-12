@@ -1,0 +1,107 @@
+{% extends "XiideaEasyGuiBundle::base.html.twig" %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Create Pages</h1>
+    </div>
+
+    {% if bundles|length == 0 %}
+        <div class="alert alert-warning">
+            <strong>Warning!</strong> to continue please create first a <a href="{{ path('guiCreateBundle') }}">Symfony Bundle</a>.
+        </div>
+    {% else %}
+    <form name="dataForm" id="dataForm" role="form" method="post" action="{{ path('guiExecuteCommand') }}">
+        <input name="command" id="command" type="hidden" value="gui:generate:controller" />
+        <div class="form-group col-sm-6">
+            <label for="bundleName">Bundle*</label>
+            <select name="bundleName" class="form-control" id="bundleName" required>
+                {% for item in bundles %}<option>{{ item }}</option>{% endfor %}
+            </select>
+            <p class="help-block">Please select target bundle.</p>
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="controllerName">Controller name*</label>
+            <div class="input-group">
+                <input name="controllerName" type="text" class="form-control" id="controllerName" placeholder="" maxlength="40" value="{{ controller }}" required="required" />
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li><a href="javascript:$('#controllerName').val('Default');">Default</a></li>
+                    </ul>
+                </div>
+            </div>
+            <p class="help-block">Enter new controller name or select existing.</p>
+        </div>
+        <div class="form-group col-sm-6">
+            <label for="controllerActions">Page name</label>
+            <input name="controllerActions" type="text" class="form-control" id="controllerActions" value="{{ action }}" placeholder="" maxlength="100" />
+            <p class="help-block">Enter here the target page name.</p>
+        </div>
+        <div class="form-group col-sm-12">
+            <hr/>
+            <p>* Required fields.</p>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+    <div class="modal fade" id="responseDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="responseDialogHeader" class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 id="responseDialogHeaderText" class="modal-title">Command Execution</h4>
+                </div>
+                <div id="responseDialogBody" class="modal-body">
+                    <p>body content</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="close-button" type="button" class="btn btn-success" data-dismiss="modal">Continue</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    {% endif %}
+{% endblock %}
+{% block javascripts %}
+    <script>
+        // send ajax request to execute commandline
+        $(document).ready(function()
+        {
+            // bind to the form's submit event
+            $('#dataForm').submit(function() { $(this).ajaxSubmit({success:showResponse, dataType:'json'}); return false; });
+        });
+
+        function showResponse(response, statusText, xhr, $form)
+        {
+            //alert(responseText.output);
+            var text = response.input + '<br/><br/>' + response.output;
+
+            if (response.errorcode == 0)
+            {
+                $('#responseDialogHeader').css('background-color', 'green');
+                $('#responseDialogHeaderText').html('Successful');
+                $('#close-button').click(function() {
+                    var url = '{{ app.request.getBaseURL() }}/';
+                    if ($('#controllerName').val().toLowerCase() != 'default')
+                    {
+                        url = url + $('#controllerName').val().toLowerCase() + '/';
+                    }
+                    url = url + $('#controllerActions').val().toLowerCase();
+
+                    // redirect to new created page
+                    location.href = url;
+                });
+            }
+            else
+            {
+                $('#responseDialogHeader').css('background-color', 'red');
+                $('#responseDialogHeaderText').html('Execution Error');
+            }
+
+            $('#responseDialogBody').html(text);
+            $('#responseDialog').modal('show');
+        }
+    </script>
+{% endblock %}

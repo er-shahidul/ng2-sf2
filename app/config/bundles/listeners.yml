@@ -1,0 +1,11 @@
+services:
+#  app.event_listener.problem_create_listener:
+#      class: AppBundle\EventListener\ProblemCreateListener
+#      tags:
+#          - { name: kernel.event_listener, event: app.problems.pre_create, method: onCreate }
+#
+#  app.event_listener.solution_create_listener:
+#      class: AppBundle\EventListener\SolutionCreateListener
+#      tags:
+#          - { name: kernel.event_listener, event: app.solutions.pre_create, method: onCreate }
+#
