@@ -5,6 +5,7 @@
   "angular-cli": {},
   "scripts": {
     "ng": "ng",
+    "ng:crud": "ng g ../../../blueprints/crud",
     "start": "ng serve",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
